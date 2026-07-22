@@ -1,0 +1,31 @@
+import os
+import telebot
+
+TELEGRAM_BOT_TOKEN = os.environ.get('BOT_TOKEN')
+bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
+
+COMPLIMENTS = [
+    "Ты сегодня самый прекрасный человек в мире.",
+    "Твоя улыбка способна осветить даже самый пасмурный день.",
+    "Ты невероятно талантливый и умный человек.",
+    "Рядом с тобой этот мир становится намного лучше и добрее.",
+    "У тебя потрясающее сердце и очень чистая душа."
+]
+
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    first_compliment = COMPLIMENTS[0]
+    text = (
+        f"Привет! ❤️\n\n"
+        f"Сегодня ты получил первый комплимент:\n"
+        f"<b>{first_compliment}</b>\n\n"
+        f"Следующий комплимент прилетит завтра в 10:00 утра."
+    )
+    bot.reply_to(message, text, parse_mode="HTML")
+
+@bot.message_handler(func=lambda message: True)
+def handle_all(message):
+    bot.reply_to(message, "Я сохранил твоё сообщение! Жди завтрашнего утра для нового комплимента в 10:00 ❤️")
+
+print("Бот комплиментов запущен...")
+bot.infinity_polling()
