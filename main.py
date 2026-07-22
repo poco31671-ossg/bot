@@ -1,17 +1,23 @@
 import os
 import telebot
+import random
 
-TOKEN = os.getenv("BOT_TOKEN", "ТВОЙ_ТОКЕН_БОТА")
-bot = telebot.TeleBot(TOKEN)
+BOT_TOKEN = os.environ.get('BOT_TOKEN')
+bot = telebot.TeleBot(BOT_TOKEN)
 
-@bot.message_handler(commands=['start'])
-def send_welcome(message):
-    bot.reply_to(message, "Привет! Я твой Telegram-бот, и я работаю на Render!")
+answers = [
+    "Интересный вопрос! Я думаю об этом.",
+    "Хм, надо над этим поразмышлять...",
+    "Я всего лишь бот, но звучит круто!",
+    "Расскажи подробнее, мне очень интересно.",
+    "Понял тебя! А что было дальше?",
+    "Круто! Полностью с тобой согласен."
+]
 
 @bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    bot.reply_to(message, f"Ты написал: {message.text}")
+def handle_message(message):
+    reply_text = random.choice(answers)
+    bot.reply_to(message, reply_text)
 
-if __name__ == "__main__":
-    print("Бот запущен...")
-    bot.infinity_polling()
+print("Бот запущен...")
+bot.infinity_polling()
